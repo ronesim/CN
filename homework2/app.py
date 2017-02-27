@@ -1,3 +1,4 @@
+import sys
 import pprint
 
 import numpy as np
@@ -122,7 +123,7 @@ def verify(A, x, b):
         z[i] = secondSum - b[i]
     return math.sqrt(np.sum(z.dot(z)))
 
-matrix, b, n, eps = readFile("input.txt")
+matrix, b, n, eps = readFile(sys.argv[1])
 A, D = solveCholeski(matrix, n, eps)
 printMatrix(A, D, n)
 
