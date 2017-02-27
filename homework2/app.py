@@ -1,7 +1,8 @@
 import pprint
 
 import numpy as np
-import scipy
+import scipy.linalg
+import math
 
 
 def readFile(filePath):
@@ -101,7 +102,27 @@ def solveSystem(A, b, diagonal):
     return xChol
 
 
-matrix, b, n, eps = readFile("input2.txt")
+def rebuiltInit(matrix):
+    Ainit = np.zeros((n, n))
+    for i in range(0, n):
+        for j in range(0, n):
+            if i <= j:
+                Ainit[i, j] = matrix[i, j]
+            else:
+                Ainit[i, j] = matrix[j, i]
+    return Ainit
+
+
+def verify(A, x, b):
+    z = np.zeros(n)
+    for i in range(0, n):
+        secondSum = 0
+        for j in range(0, n):
+            secondSum += A[i, j] * x[j]
+        z[i] = secondSum - b[i]
+    return math.sqrt(np.sum(z.dot(z)))
+
+matrix, b, n, eps = readFile("input.txt")
 A, D = solveCholeski(matrix, n, eps)
 printMatrix(A, D, n)
 
@@ -110,14 +131,22 @@ print("Determinant A = {}".format(detA))
 
 # calculate Ax = b using LDL(t)
 xChol = solveSystem(A, b, D)
-print("XChol (system solution Ax = b) = {}".format(xChol))
+print("xChol (system solution Ax = b) = {}".format(xChol))
 
 # compute LU decomposition using scipy
-A = scipy.array(A)
-P, L, U = scipy.linalg.lu(A)
+Ainit = scipy.array(rebuiltInit(A))
+P, L, U = scipy.linalg.lu(Ainit)
 
 print("L:")
 pprint.pprint(L)
 
 print("U:")
 pprint.pprint(U)
+
+# solve Ainit * x = b using numpy
+b = scipy.array(b)
+print("Solution using scipy Ax = b: {} ".format(scipy.linalg.solve(Ainit, b)))
+
+# verify solution
+norm = verify(Ainit, xChol, b)
+print("Norm is {} and norm < eps is {}".format(norm, norm < eps))
