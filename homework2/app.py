@@ -1,4 +1,7 @@
+import pprint
+
 import numpy as np
+import scipy
 
 
 def readFile(filePath):
@@ -68,10 +71,37 @@ def determinant(diagonal):
 
 
 def solveSystem(A, b, diagonal):
-    return 1  # TO DO (ronesim)
+    # solve Lz = b
+    z = np.zeros(n)
+    for i in range(0, n):
+        # zi = bi - sum(Aij*zj) j = 1...i-1
+        sumSecond = 0
+        for j in range(0, i):
+            sumSecond += A[i, j] * z[j]
+        z[i] = b[i] - sumSecond
+
+    # solve Dy = z
+    y = np.zeros(n)
+    for i in range(0, n):
+        # y[i] = z[i] / diagonal[i]
+        if abs(diagonal[i]) > eps:
+            y[i] = z[i] / diagonal[i]
+        else:
+            Exception("Divide by zero, the system cannot be solved")
+
+    # solve L(t)x = y
+    xChol = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        # xi = bi - sum(Aij*xj) j = i+1...n
+        sumSecond = 0
+        for j in range(i + 1, n):
+            sumSecond += A[j, i] * xChol[j]
+        xChol[i] = y[i] - sumSecond
+
+    return xChol
 
 
-matrix, b, n, eps = readFile("input.txt")
+matrix, b, n, eps = readFile("input2.txt")
 A, D = solveCholeski(matrix, n, eps)
 printMatrix(A, D, n)
 
@@ -79,4 +109,15 @@ detA = determinant(D)  # det A = det L * det D * det L(t) = 1 * det D * 1 = det 
 print("Determinant A = {}".format(detA))
 
 # calculate Ax = b using LDL(t)
-ans = solveSystem(A, b, D)
+xChol = solveSystem(A, b, D)
+print("XChol (system solution Ax = b) = {}".format(xChol))
+
+# compute LU decomposition using scipy
+A = scipy.array(A)
+P, L, U = scipy.linalg.lu(A)
+
+print("L:")
+pprint.pprint(L)
+
+print("U:")
+pprint.pprint(U)
