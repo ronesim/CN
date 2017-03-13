@@ -1,6 +1,3 @@
-import time
-
-
 def print_matrix(matrix):
     print('\n'.join([' '.join(map(str, row)) for row in matrix]))
 
@@ -26,7 +23,7 @@ def matrix_sum(m1, m2):
         while c2 < col_len and 0 < col[c2] < m2['col'][c1]:
             c2 += 1
 
-        if c1 == c2
+        # TODO vlupoaie
 
 
 
