@@ -46,6 +46,20 @@ def checkDiagonal(matrixA):
     return all(matrixA["d"])
 
 
+def checkDiagonalDominance(matrixA):
+    line = 0
+    for index, elem in enumerate(matrixA["d"]):
+        computedSum = 0
+        if matrixA["col"][line] * (-1) == index + 1:
+            line += 1
+            while matrixA["col"][line] > 0:
+                computedSum += matrixA["val"][line]
+                line += 1
+        if abs(elem) <= abs(computedSum):
+            return False
+    return True
+
+
 if __name__ == '__main__':
     NUMBER_OF_FILES = 6
 
@@ -65,12 +79,14 @@ if __name__ == '__main__':
             savedMatrix = pickle.loads(f_handle.read())
         print('Loading saved parsed files took {:.2f} seconds'.format(time.time() - start_time))
 
-    numberSystem = 0
-    for system in savedMatrix:
+    for numberSystem, system in enumerate(savedMatrix):
         # compute XGS for each tuple (A,B)
         if checkDiagonal(system[0]):  # if all diagonal elem are non-null
+            if checkDiagonalDominance(system[0]) is False:
+                print("System number {}: Diagonal is dominant".format(numberSystem))
+                continue
             XGS, iterations = solveSystemGaussSeidel(system[0], system[1])  # solve system
-            if XGS == "no solution":
+            if type(XGS) == str and XGS == "no solution":
                 print("System number {} cannot be solved".format(numberSystem))
                 print("Number of iterations: {}".format(10000 - iterations))
             else:
@@ -82,5 +98,3 @@ if __name__ == '__main__':
                 print("Norm ||A * XGS - b||inf is {}".format(np.max(abs(np.array(bAprox) - np.array(system[1])))))
         else:
             print("System number {} cannot be solved. Diagonal has null elements".format(numberSystem))
-
-        numberSystem += 1

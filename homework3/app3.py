@@ -207,13 +207,18 @@ def read_file(file_path, check=True):
         val = [0]
         col = [-1]
         row = 0
+        count = 0
         for item in sorted(matrix.keys()):
             while item[0] != row:
                 row += 1
                 col.append(-(row + 1))
                 val.append(0)
+                count = 0
             col.append(item[1] + 1)
             val.append(matrix[item])
+            count += 1
+            if count == 10 and check:
+                exit("More than 10 non-null values on line...")
         col.append(-(row + 2))
         val.append(0)
         return {'n': n, 'nn': nn, 'd': d, 'val': val, 'col': col}, b
