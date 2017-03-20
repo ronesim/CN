@@ -1,9 +1,9 @@
-import sys
+import math
 import pprint
+import sys
 
 import numpy as np
 import scipy.linalg
-import math
 
 
 def readFile(filePath):
@@ -39,7 +39,7 @@ def printMatrix(matrix, diagonal, n):
     print("D:")
     for row in range(0, n):
         for col in range(0, n):
-            if row is col:
+            if row == col:
                 print(diagonal[row], end=' ')
             else:
                 print(0, end=' ')
@@ -122,6 +122,7 @@ def verify(A, x, b):
             secondSum += A[i, j] * x[j]
         z[i] = secondSum - b[i]
     return math.sqrt(np.sum(z.dot(z)))
+
 
 matrix, b, n, eps = readFile(sys.argv[1])
 A, D = solveCholeski(matrix, n, eps)
