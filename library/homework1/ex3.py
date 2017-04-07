@@ -9,29 +9,36 @@ c4 = 1 / f(9)
 c5 = 1 / f(11)
 c6 = 1 / f(13)
 
+
 def p1(x):
-   y = x * x
-   return x * (1 + y * (-c1 + c2 * y))
+    y = x * x
+    return x * (1 + y * (-c1 + c2 * y))
+
 
 def p2(x):
-   y = x * x
-   return x * (1 + y * (-c1 + y * (c2 - c3 * y)))
+    y = x * x
+    return x * (1 + y * (-c1 + y * (c2 - c3 * y)))
+
 
 def p3(x):
-   y = x * x
-   return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + c4 * y))))
+    y = x * x
+    return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + c4 * y))))
+
 
 def p4(x):
-   y = x * x
-   return x * (1 + y * (-0.166 + y * (0.00833 - y * (-c3 + c4 * y))))
+    y = x * x
+    return x * (1 + y * (-0.166 + y * (0.00833 - y * (-c3 + c4 * y))))
+
 
 def p5(x):
-   y = x * x
-   return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + y * (c4 - c5 * y)))))
+    y = x * x
+    return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + y * (c4 - c5 * y)))))
+
 
 def p6(x):
-   y = x * x
-   return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + y * (c4 + y * (-c5 + c6 * y))))))
+    y = x * x
+    return x * (1 + y * (-c1 + y * (c2 - y * (-c3 + y * (c4 + y * (-c5 + c6 * y))))))
+
 
 polinoame = [p1, p2, p3, p4, p5, p6]
 
