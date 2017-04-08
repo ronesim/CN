@@ -3,7 +3,7 @@ body {
     padding-top: 2rem;
 }
 
-.form-control {
-    border: 1px solid;
-    border-color: #2aabd2;
+caption {
+    caption-side: top;
+    text-align: center;
 }

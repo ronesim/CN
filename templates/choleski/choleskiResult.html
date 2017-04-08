@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Choleski Decomposition Result</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Initial matrix</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, NMAX) %}
+                    <tr>
+                        {% for col in range(0, NMAX) %}
+                            {% if col >= row %}
+                                <td> {{ Amatrix[row, col] }} </td>
+                            {% else %}
+                                <td> {{ Amatrix[col, row] }} </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <table class="table table-condensed table-bordered">
+                <caption><b>L matrix</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, NMAX) %}
+                    <tr>
+                        {% for col in range(0, NMAX) %}
+                            {% if col < row %}
+                                <td> {{ Amatrix[row, col] }} </td>
+                            {% elif col > row %}
+                                <td> {{ 0 }} </td>
+                            {% else %}
+                                <td> {{ 1 }} </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>Diagonal vector</b></td>
+                    {% for index in range(0, NMAX) %}
+                        <td> {{ D[index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table class="table table-condensed table-bordered">
+                <caption><b>L matrix (lu decomposition)</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, NMAX) %}
+                    <tr>
+                        {% for col in range(0, NMAX) %}
+                            <td> {{ Llu[row, col] }} </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <table class="table table-condensed table-bordered">
+                <caption><b>U matrix (lu decomposition)</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, NMAX) %}
+                    <tr>
+                        {% for col in range(0, NMAX) %}
+                            <td> {{ Ulu[row, col] }} </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Solution system A * x = b</b></caption>
+                <tbody>
+                <tr>
+                    <td><b>xChol (A * xChol = b using Cholesky)</b></td>
+                    <td>
+                        <table class="table table-condensed table-bordered">
+                            <tbody>
+                            <tr>
+                                {% for index in range(0, NMAX) %}
+                                    <td>{{ xChol[index] }}</td>
+                                {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>norm</b></td>
+                    <td align="center"> {{ norm }} </td>
+                </tr>
+                <tr>
+                    <td><b>norm < precision</b></td>
+                    <td align="center"> {{ normComp }} </td>
+                </tr>
+                <tr>
+                    <td><b>x (A * x = b using Scipy library)</b></td>
+                    <td>
+                        <table class="table table-condensed table-bordered">
+                            <tbody>
+                            <tr>
+                                {% for index in range(0, NMAX) %}
+                                    <td>{{ solveSystemScipy[index] }}</td>
+                                {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/js/validator.js"></script>
+</body>
+</html>
