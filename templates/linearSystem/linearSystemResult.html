@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Linear System Gauss-Seidel Result</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <h4>Sparse matrix representation</h4>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <h4>N = {{ sparse_matrix_representation['n'] }} and NN = {{ sparse_matrix_representation['nn'] }}</h4>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>Diagonal vector</b></td>
+                    {% for index in range(0, NMAX) %}
+                        <td> {{ sparse_matrix_representation['d'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>VAL vector</b></td>
+                    {% for index in range(0, NMAX + sparse_matrix_representation['nn']) %}
+                        <td> {{ sparse_matrix_representation['val'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>COL vector</b></td>
+                    {% for index in range(0, NMAX + sparse_matrix_representation['nn']) %}
+                        <td> {{ sparse_matrix_representation['col'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <hr>
+    <div class="row">
+        {% if XGS == "No Solution" %}
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <h4>This system cannot be solved: {{ info }}</h4>
+            </div>
+        {% else %}
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <table class="table table-condensed table-bordered">
+                    <caption><b>Solution system A * x = b</b></caption>
+                    <tbody>
+                    <tr>
+                        <td><b>x (Gauss-Seidel)</b></td>
+                        <td>
+                            <table class="table table-condensed table-bordered">
+                                <tbody>
+                                <tr>
+                                    {% for index in range(0, NMAX) %}
+                                        <td>{{ XGS[index] }}</td>
+                                    {% endfor %}
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>number of iterations</b></td>
+                        <td align="center"> {{ info }} </td>
+                    </tr>
+                    <tr>
+                        <td><b>norm</b></td>
+                        <td align="center"> {{ norm }} </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        {% endif %}
+    </div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>

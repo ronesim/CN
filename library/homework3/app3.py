@@ -154,39 +154,6 @@ def read_file(file_path, check=True):
             b.append(float(handle.readline().strip()))
         handle.readline()
 
-        # TODO vlupoaie remove unused code
-        # READ and COMPUTE (O(n^2)) matrix and check less than 10 elements per line
-        # d = [0 for _ in range(n)]
-        # val = [0 for _ in range(n + 1)]
-        # col = [-(k + 1) for k in range(n + 1)]
-        # nn = 0
-        # line = handle.readline().strip()
-        # while line:
-        #     value, i, j = map(lambda x: int(x[1]) if x[0] else float(x[1]), enumerate(line.split(',')))
-        #     if i == j:
-        #         d[i] += value
-        #     else:
-        #         nn += 1
-        #         for c, m in enumerate(col):
-        #             if m == -(i + 1):
-        #                 for count, z in enumerate(col[c + 1:]):
-        #                     if z == j + 1:
-        #                         val[count + c + 1] += value
-        #                         break
-        #                     elif z < 0 or z > j + 1:
-        #                         col.insert(count + c + 1, j + 1)
-        #                         val.insert(count + c + 1, value)
-        #                         break
-        #                     elif count == 9:
-        #                         if check:
-        #                             exit("More than 10 non-null values on line {}: {}..."
-        #                                  "".format(i, ' '.join(map(str, col[c + 1:c + 11]))))
-        #                         else:
-        #                             print("More than 10 non-null values on line {}: {}..."
-        #                                   "".format(i, ' '.join(map(str, col[c + 1:c + 11]))))
-        #                 break
-        #     line = handle.readline().strip()
-
         # # READ AND COMPUTE O(nlogn)
         d = [0 for _ in range(n)]
         nn = 0

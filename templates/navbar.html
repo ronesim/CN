@@ -20,9 +20,9 @@
                    aria-haspopup="true" aria-expanded="false">Tools</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="{{ url_for('choleskiDecomposition') }}">Choleski Decomposition</a>
-                    <a class="dropdown-item" href="#">Sparse matrix</a>
+                    <a class="dropdown-item" href="{{ url_for('sparseMatrix') }}">Sparse matrix</a>
                     <a class="dropdown-item" href="#">Matrix Inverse</a>
-                    <a class="dropdown-item" href="#">Linear system</a>
+                    <a class="dropdown-item" href="{{ url_for('linearSystem') }}">Linear system</a>
                 </div>
             </li>
         </ul>

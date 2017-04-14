@@ -1,6 +1,7 @@
 import math
 
 import numpy as np
+import scipy.linalg
 
 
 def solveCholeski(A, n, eps):
@@ -80,3 +81,26 @@ def verify(A, x, b, NMAX):
             secondSum += A[i, j] * x[j]
         z[i] = secondSum - b[i]
     return math.sqrt(np.sum(z.dot(z)))
+
+
+def main_function(finalMatrix, matrixDimension, b, eps):
+    # matrix is symmetric, compute Choleski decomposition
+    A, D = solveCholeski(finalMatrix, matrixDimension, eps)
+
+    detA = determinant(D)  # det A = det L * det D * det L(t) = 1 * det D * 1 = det D
+
+    # calculate Ax = b using LDL(t)
+    xChol = solveSystem(A, b, D, eps)
+
+    # compute LU decomposition using scipy
+    Ainit = scipy.array(rebuiltInit(A, matrixDimension))
+    P, L, U = scipy.linalg.lu(Ainit)
+
+    # solve Ainit * x = b using numpy
+    b = scipy.array(b)
+    solveSystemScipy = scipy.linalg.solve(Ainit, b)
+
+    # verify solution
+    norm = verify(Ainit, xChol, b, matrixDimension)
+
+    return A, D, detA, xChol, L, U, solveSystemScipy, norm

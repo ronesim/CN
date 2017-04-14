@@ -1,8 +1,6 @@
-import numpy as np
-import scipy.linalg
 from flask import Flask, render_template, request
 
-from library import util, choleski
+from library import util, choleski, linearSystemGS
 
 app = Flask(__name__)
 
@@ -20,53 +18,58 @@ def choleskiDecomposition():
 @app.route('/submitCholeski', methods=['POST'])
 def submitCholeski():
     # get information from form
-    matrixDimension = int(request.form['inputMatrixSize'])  # matrix size
-    precision = int(request.form['inputPrecision'])  # eps precision
-    matrix = request.form['inputMatrix']  # matrix A
-    b = request.form['inputVector']  # Ax = b
+    matrixDimension, precision, matrix, b = util.get_data_from_form(request)
 
     # validate matrix and vector using matrix size
-    b = np.array([float(x) for x in b.split()])
-    eps = 10 ** (-precision)
-    if util.isSquare(matrixDimension, matrix.split()) and len(b) == matrixDimension:
-        # process given matrix
-        elements = matrix.split()
-        processedMatrix = []
-        for rows in range(0, matrixDimension):
-            row = []
-            for column in range(0, matrixDimension):
-                row.append(float(elements[rows * matrixDimension + column]))
-            processedMatrix.append(row)
-        finalMatrix = np.matrix(processedMatrix)
+    b, eps = util.refactor_data(b, precision)
+
+    if util.validate_data("standard", matrixDimension, matrix.split(), b):
+        finalMatrix = util.get_processed_standard_matrix(matrix, matrixDimension)
 
         if util.isSymmetric(finalMatrix):
-            # matrix is symmetric, compute Choleski decomposition
-            A, D = choleski.solveCholeski(finalMatrix, matrixDimension, eps)
-
-            detA = choleski.determinant(D)  # det A = det L * det D * det L(t) = 1 * det D * 1 = det D
-
-            # calculate Ax = b using LDL(t)
-            xChol = choleski.solveSystem(A, b, D, eps)
-
-            # compute LU decomposition using scipy
-            Ainit = scipy.array(choleski.rebuiltInit(A, matrixDimension))
-            P, L, U = scipy.linalg.lu(Ainit)
-
-            # solve Ainit * x = b using numpy
-            b = scipy.array(b)
-            solveSystemScipy = scipy.linalg.solve(Ainit, b)
-
-            # verify solution
-            norm = choleski.verify(Ainit, xChol, b, matrixDimension)
-
+            A, D, detA, xChol, L, U, solveSystemScipy, norm = choleski.main_function(finalMatrix, matrixDimension, b,
+                                                                                     eps)
             return render_template('choleski/choleskiResult.html', NMAX=matrixDimension, Amatrix=A, D=D, detA=detA,
-                                   xChol=xChol, Llu=L, Ulu=U,
-                                   solveSystemScipy=solveSystemScipy, norm=norm, normComp=norm < eps)
+                                   xChol=xChol, Llu=L, Ulu=U, solveSystemScipy=solveSystemScipy, norm=norm,
+                                   normComp=norm < eps)
         else:
-            return "Matrix is not symmetric"
+            return "Matrix is not symmetric"  # TODO create template
     else:
-        return "Matrix is not symmetric"
+        return "Matrix is not symmetric"  # TODO create template
 
 
+@app.route('/sparseMatrix')
+def sparseMatrix():
+    return render_template('sparseMatrix/sparseMatrix.html')
+
+
+@app.route('/linearSystem')
+def linearSystem():
+    return render_template('linearSystem/linearSystem.html')
+
+
+@app.route('/submitLinearSystem', methods=['POST'])
+def submitLinearSystem():
+    # get information from form
+    matrixDimension, precision, matrix, b = util.get_data_from_form(request)
+
+    # validate matrix and vector using matrix size
+    b, eps = util.refactor_data(b, precision)
+
+    if util.validate_data("sparse", matrixDimension, matrix.split(), b):
+        sparse_matrix_representation = util.get_processed_sparse_matrix(matrix, matrixDimension)
+        XGS, info = linearSystemGS.main_function(sparse_matrix_representation, b, eps)
+        print(XGS)
+        if type(XGS) == str and XGS == "no solution":
+            return render_template('linearSystem/linearSystemResult.html', NMAX=matrixDimension,
+                                   sparse_matrix_representation=sparse_matrix_representation, XGS="No Solution",
+                                   info=info)
+        # compute norm
+        norm = linearSystemGS.compute_norm(sparse_matrix_representation, XGS, b)
+        return render_template('linearSystem/linearSystemResult.html', NMAX=matrixDimension,
+                               sparse_matrix_representation=sparse_matrix_representation, XGS=XGS, norm=norm, info=info)
+
+    else:
+        return "Invalid matrix"  # TODO create template
 if __name__ == '__main__':
     app.run()
