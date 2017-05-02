@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Matrix Inverse</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Initial matrix</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, NMAX) %}
+                    <tr>
+                        {% for col in range(0, NMAX) %}
+                            <td> {{ init_matrix[row, col] }} </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            {% if inv_matrixes[0] == str and inv_matrixes[0] == "Divergent" %}
+                <h4>Schulz method: There is no inverse matrix after {{ inv_matrixes[1] }} iterations</h4>
+            {% else %}
+                <table class="table table-condensed table-bordered">
+                    <caption><b>Schulz matrix {{ inv_matrixes[1] }} iter.</b></caption>
+                    <thead></thead>
+                    <tbody>
+                    {% for row in range(0, NMAX) %}
+                        <tr>
+                            {% for col in range(0, NMAX) %}
+                                <td> {{ inv_matrixes[0][row,col] }} </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            {% if inv_matrixes[2] == str and inv_matrixes[2] == "Divergent" %}
+                <h4>Li&Li first method: There is no inverse matrix after {{ inv_matrixes[3] }} iterations</h4>
+            {% else %}
+                <table class="table table-condensed table-bordered">
+                    <caption><b>Li&Li first method {{ inv_matrixes[3] }} iter.</b></caption>
+                    <thead></thead>
+                    <tbody>
+                    {% for row in range(0, NMAX) %}
+                        <tr>
+                            {% for col in range(0, NMAX) %}
+                                <td> {{ inv_matrixes[4][row,col] }} </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            {% if inv_matrixes[4] == str and inv_matrixes[4] == "Divergent" %}
+                <h4>Li&Li second method: There is no inverse matrix after {{ inv_matrixes[5] }} iterations</h4>
+            {% else %}
+                <table class="table table-condensed table-bordered">
+                    <caption><b>Li&Li second method {{ inv_matrixes[5] }} iter.</b></caption>
+                    <thead></thead>
+                    <tbody>
+                    {% for row in range(0, NMAX) %}
+                        <tr>
+                            {% for col in range(0, NMAX) %}
+                                <td> {{ inv_matrixes[4][row,col] }} </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-11">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Norms</b></caption>
+                <thead>
+                <tr>
+                    <th>Schulz's norm</th>
+                    <th>||A * A^(-1) - I(n)||<sub>1</sub></th>
+                    <th>LI&LI<sub>1</sub>'s norm</th>
+                    <th>||A * A^(-1) - I(n)||<sub>1</sub></th>
+                    <th>LI&LI<sub>2</sub>'s norm</th>
+                    <th>||A * A^(-1) - I(n)||<sub>1</sub></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ norms[0][0] }}</td>
+                    <td>{{ norms[0][1] }}</td>
+                    <td>{{ norms[1][0] }}</td>
+                    <td>{{ norms[1][1] }}</td>
+                    <td>{{ norms[2][0] }}</td>
+                    <td>{{ norms[2][1] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>

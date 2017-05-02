@@ -58,41 +58,42 @@ def matrix_multiply(m1, m2):
     n = len(m1['d'])
     result_matrix = {}
 
-    c1 = 0
-    line1 = 0
-    while m1['col'][c1] != -(n + 1):
+    col_one = 0
+    row_one = 0
+    while m1['col'][col_one] != -(n + 1):
         # get this line from m1
-        line1 += 1
-        c1 += 1
+        row_one += 1
+        col_one += 1
         this_line1 = {}
         not_added = True
-        while m1['col'][c1] > 0:
-            if not_added and m1['col'][c1] > line1:
+        while m1['col'][col_one] > 0:
+            if not_added and m1['col'][col_one] > row_one:
                 not_added = False
-                this_line1[line1] = m1['d'][line1 - 1]
-            this_line1[m1['col'][c1]] = m1['val'][c1]
-            c1 += 1
+                this_line1[row_one] = m1['d'][row_one - 1]
+            this_line1[m1['col'][col_one]] = m1['val'][col_one]
+            col_one += 1
         if not_added:
-            this_line1[line1] = m1['d'][line1 - 1]
+            this_line1[row_one] = m1['d'][row_one - 1]
 
         # get all lines of m2
-        c2 = 0
-        line2 = 0
-        while m2['col'][c2] != -(n + 1):
-            line2 += 1
-            c2 += 1
-            while m2['col'][c2] > 0:
-                if line2 in this_line1:
-                    temp_value = result_matrix.get((line1, m2['col'][c2]), 0)
-                    result_matrix[(line1, m2['col'][c2])] = temp_value + this_line1[line2] * m2['val'][c2]
-                c2 += 1
+        col_two = 0
+        row_two = 0
+        while m2['col'][col_two] != -(n + 1):
+            row_two += 1
+            col_two += 1
+            while m2['col'][col_two] > 0:
+                if row_two in this_line1:
+                    temp_value = result_matrix.get((row_one, m2['col'][col_two]), 0)
+                    result_matrix[(row_one, m2['col'][col_two])] = temp_value + this_line1[row_two] * m2['val'][col_two]
+                col_two += 1
 
         # get all diagonal items of m2
-        for c3 in range(n):
-            if m2['d'][c3]:
-                if c3 + 1 in this_line1:
-                    temp_value = result_matrix.get((line1, c3 + 1), 0)
-                    result_matrix[(line1, c3 + 1)] = temp_value + this_line1[c3 + 1] * m2['d'][c3]
+        for col_three in range(n):
+            if m2['d'][col_three]:
+                if col_three + 1 in this_line1:
+                    temp_value = result_matrix.get((row_one, col_three + 1), 0)
+                    result_matrix[(row_one, col_three + 1)] = temp_value + this_line1[col_three + 1] * m2['d'][
+                        col_three]
 
     # parse new matrix and return it
     d = [0 for _ in range(n)]
@@ -120,26 +121,24 @@ def matrix_multiply(m1, m2):
     return {'n': n, 'nn': nn, 'd': d, 'val': val, 'col': col}
 
 
-def vector_multiply(m1, vector):
+def vector_multiply(matrix, vector):
     # response vector
-    r_vec = [0 for _ in range(m1['n'])]
+    ans = [0 for _ in range(matrix['n'])]
 
     # iterate over whole matrix
-    n = m1['n']
-    c1 = 0
-    line1 = 1
-    while m1['col'][c1] != -(n + 1):
-        c1 += 1
-        if m1['col'][c1] < 0:
-            line1 += 1
+    n = matrix['n']
+    row = 1
+    for index in range(1, len(matrix['col'])):
+        if matrix['col'][index] < 0:
+            row += 1
         else:
-            r_vec[line1 - 1] += m1['val'][c1] * vector[m1['col'][c1] - 1]
+            ans[row - 1] += matrix['val'][index] * vector[matrix['col'][index] - 1]
 
     # iterate over matrix diagonal
     for i in range(n):
-        r_vec[i] += m1['d'][i] * vector[i]
+        ans[i] += matrix['d'][i] * vector[i]
 
-    return r_vec
+    return ans
 
 
 def read_file(file_path, check=True):
