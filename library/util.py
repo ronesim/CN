@@ -38,15 +38,15 @@ def validate_data(type, matrix_size, elements, b):
         return is_square(matrix_size, elements) and len(b) == matrix_size and matrix_size <= 10
 
 
-def get_processed_standard_matrix(matrix, matrix_size):
+def get_processed_standard_matrix(matrix, row, column):
     # process given matrix
     elements = matrix.split()
     processed_matrix = []
-    for rows in range(0, matrix_size):
-        row = []
-        for column in range(0, matrix_size):
-            row.append(float(elements[rows * matrix_size + column]))
-        processed_matrix.append(row)
+    for rows in range(0, row):
+        row_elem = []
+        for cols in range(0, column):
+            row_elem.append(float(elements[rows * column + cols]))
+        processed_matrix.append(row_elem)
     return np.matrix(processed_matrix)
 
 

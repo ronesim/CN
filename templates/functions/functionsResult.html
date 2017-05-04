@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Functions result</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Values</b></caption>
+                <tbody>
+                <tr>
+                    <td><b>Real values</b></td>
+                    <td>{% set comma = joiner(",") %}
+                        {% for value in result[0] %}
+                            {{ comma() }}{{ value }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Minimum value</b></td>
+                    <td>{% if lg == 0 %}
+                        There is no minimum value
+                    {% else %}
+                        {% set comma = joiner(",") %}
+                        {% for value in result[1] %}
+                            {{ comma() }}{{ value }}
+                        {% endfor %}
+                    {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>

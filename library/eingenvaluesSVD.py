@@ -1,8 +1,10 @@
+import os
+
 import numpy as np
 from scipy import stats
 from scipy.sparse import random
 
-from library.homework3 import app3
+from library import sparseMatrix
 from library.util import read_sparse_matrix_from_file
 
 
@@ -69,12 +71,12 @@ def generate_eigenvalues_eigenvectors(matrix, eps):
     k_max = 1000000
     x = np.random.randn(matrix['n'])
     v = x / np.linalg.norm(x)
-    w = np.array(app3.vector_multiply(matrix, v))
+    w = np.array(sparseMatrix.vector_multiply(matrix, v))
     alpha = scalar_product(w, v)
     k = 0
     while (k <= k_max and np.linalg.norm(w - alpha * v) > matrix['n'] * eps):
         v = w / np.linalg.norm(w)
-        w = np.array(app3.vector_multiply(matrix, v))
+        w = np.array(sparseMatrix.vector_multiply(matrix, v))
         alpha = scalar_product(w, v)
         k += 1
 
@@ -101,9 +103,6 @@ def SVD_get_info(matrix, s_index):
               
     """
     U, S, V = np.linalg.svd(matrix)
-    print("U: ", U)
-    print("S: ", S)
-    print("V: ", V)
     rows = matrix.shape[0]
     cols = matrix.shape[1]
     s_matrix = np.zeros((rows, cols))
@@ -119,14 +118,20 @@ def SVD_get_info(matrix, s_index):
     for index in range(0, s_index):
         A_s = A_s + compute_matrix(U[:, index], V[:, index], S[index])
 
-    return S, len(S.nonzero()[0]), max(S) / min(S[x] for x in range(0, len(S)) if S[x] > 0), np.max(
+    non_zeros_s = []
+    for s in S:
+        if abs(s) > 10 ** (-10):
+            non_zeros_s.append(s)
+    return U, non_zeros_s, V, len(non_zeros_s), max(non_zeros_s) / min(non_zeros_s), np.max(
         np.sum(matrix - U * s_matrix * V, axis=1)), A_s, np.max(np.sum(matrix - A_s, axis=1))
 
 
 def main_function(p, n):
+    APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+    APP_UPLOADS = os.path.join(APP_ROOT, 'example/inputFileApp6.txt')
     eps = 10 ** (-10)
     if (p == n):
-        readMatrix = read_sparse_matrix_from_file("inputFileApp6.txt", False)
+        readMatrix = read_sparse_matrix_from_file(APP_UPLOADS, False)
         randomMatrix = generate_random_sparse_matrix(n)
         if not matrix_is_symmetric(readMatrix, eps):
             return "Invalid matrix: not symmetric"
@@ -134,13 +139,5 @@ def main_function(p, n):
         result = []
         result.append(generate_eigenvalues_eigenvectors(readMatrix, eps))
         result.append(generate_eigenvalues_eigenvectors(randomMatrix, eps))
+        result.append(randomMatrix)
         return result
-
-
-# result = main_function(5, 5)
-# print(result)
-matrix = np.matrix([[3, 2, 2],
-                    [2, 3, -2],
-                    [3, 2, 2],
-                    [2, 3, -2]])
-print(SVD_get_info(matrix, 3))

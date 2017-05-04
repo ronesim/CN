@@ -2,8 +2,6 @@ import math
 
 import numpy as np
 
-from library.homework3 import app3
-
 
 def solve_system_Gauss_Seidel(A, b, eps):
     XGS = np.zeros(A["n"])

@@ -1,8 +1,16 @@
-from flask import Flask, render_template, request
+import os
 
-from library import util, choleskiApp, linearSystemGSApp, matrixInverseApp
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+
+from library import util, choleskiApp, linearSystemGSApp, matrixInverseApp, sparseMatrix, eingenvaluesSVD, functionsApp
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'library/uploads')
+ALLOWED_EXTENSIONS = {'txt'}
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -24,7 +32,7 @@ def submit_choleski():
     b, eps = util.refactor_data(b, precision)
 
     if util.validate_data("standard", matrix_size, matrix.split(), b):
-        final_matrix = util.get_processed_standard_matrix(matrix, matrix_size)
+        final_matrix = util.get_processed_standard_matrix(matrix, matrix_size, matrix_size)
 
         if util.is_symmetric(final_matrix):
             A, D, detA, xChol, L, U, solveSystemScipy, norm = choleskiApp.main_function(final_matrix, matrix_size, b,
@@ -41,6 +49,47 @@ def submit_choleski():
 @app.route('/sparseMatrix')
 def sparse_matrix():
     return render_template('sparseMatrix/sparseMatrix.html')
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/submitSparseMatrix', methods=['POST'])
+def submit_sparse_matrix():
+    file_a = request.files['aMatrix']
+    file_b = request.files['bMatrix']
+    file_aplusb = request.files['aplusbMatrix']
+    file_aorib = request.files['aoribMatrix']
+
+    count = 0
+    if file_a and allowed_file(file_a.filename):
+        filename = secure_filename(file_a.filename)
+        file_a.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        count += 1
+    if file_b and allowed_file(file_b.filename):
+        filename = secure_filename(file_b.filename)
+        file_b.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        count += 1
+    if file_aplusb and allowed_file(file_aplusb.filename):
+        filename = secure_filename(file_aplusb.filename)
+        file_aplusb.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        count += 1
+    if file_aorib and allowed_file(file_aorib.filename):
+        filename = secure_filename(file_aorib.filename)
+        file_aorib.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        count += 1
+
+    if count == 4:
+        result = sparseMatrix.main_function(
+            [file_a.filename, file_b.filename, file_aplusb.filename, file_aorib.filename])
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file_a.filename))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file_b.filename))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file_aplusb.filename))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file_aorib.filename))
+        return render_template('sparseMatrix/sparseMatrixResult.html', result_time=result[0], solve_time=result[1])
+    return "Invalid files"
 
 
 @app.route('/linearSystem')
@@ -84,7 +133,7 @@ def submit_matrix_inverse():
     eps = 10 ** (-precision)
 
     if util.is_square(matrix_size, matrix.split()) and matrix_size < 10:
-        final_matrix = util.get_processed_standard_matrix(matrix, matrix_size)
+        final_matrix = util.get_processed_standard_matrix(matrix, matrix_size, matrix_size)
         inv_list = list(matrixInverseApp.main_function(final_matrix, matrix_size, eps))
 
         norms = list()
@@ -94,6 +143,44 @@ def submit_matrix_inverse():
 
         return render_template('matrixInverse/matrixInverseResult.html', NMAX=matrix_size, init_matrix=final_matrix,
                                inv_matrixes=inv_list, norms=norms)
+
+
+@app.route('/eigenvaluesSVD')
+def eigenvalues_SVD():
+    return render_template('eigenvaluesSVD/eigenvaluesSVD.html')
+
+
+@app.route('/submitEigenvaluesSVD', methods=['POST'])
+def submit_eigenvalues_SVD():
+    row = request.form['inputRow']
+    column = request.form['inputColumn']
+    matrix = request.form['inputMatrix']
+
+    row = int(row)
+    column = int(column)
+
+    result = eingenvaluesSVD.main_function(min(row, column), min(row, column))
+    final_matrix = util.get_processed_standard_matrix(matrix, row, column)
+    result_info = eingenvaluesSVD.SVD_get_info(final_matrix, 2)
+    return render_template('eigenvaluesSVD/eigenvaluesSVDResult.html', NMAX=min(row, column), eigenvalues=result,
+                           svd_info=result_info, row=row, col=column)
+
+
+@app.route('/functions')
+def functions():
+    return render_template('functions/functions.html')
+
+
+@app.route('/submitFunctions', methods=['POST'])
+def submit_functions():
+    coeff = request.form['inputCoeff']
+    coeff = coeff.split()
+
+    coeff = [float(x) for x in coeff]
+    result = functionsApp.main_function(coeff)
+
+    return render_template('functions/functionsResult.html', result=result, lg=len(result[1]))
+
 
 
 if __name__ == '__main__':

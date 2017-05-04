@@ -1,5 +1,4 @@
-import pickle
-import sys
+import os
 import time
 
 
@@ -190,62 +189,52 @@ def read_file(file_path, check=True):
         return {'n': n, 'nn': nn, 'd': d, 'val': val, 'col': col}, b
 
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == 'reload':
-        start_time = time.time()
-        print('Reading matrix A')
-        matA, vecA = read_file('a.txt')
-        print(matA["col"])
-        print('Reading took {:.2f} seconds'.format(time.time() - start_time))
-        print('Reading matrix B')
-        matB, vecB = read_file('b.txt')
-        print('Reading took {:.2f} seconds'.format(time.time() - start_time))
-        print('Reading matrix SUM')
-        sumM, vecSum = read_file('aplusb.txt', check=False)
-        print('Reading took {:.2f} seconds'.format(time.time() - start_time))
-        print('Reading matrix MUL')
-        mulM, vecMul = read_file('aorib.txt', check=False)
-        print('Reading took {:.2f} seconds'.format(time.time() - start_time))
-        with open('save.pkl', 'wb') as f_handle:
-            x = (matA, vecA, matB, vecB, sumM, vecSum, mulM, vecMul)
-            f_handle.write(pickle.dumps(x))
-    else:
-        start_time = time.time()
-        with open('save.pkl', 'rb') as f_handle:
-            matA, vecA, matB, vecB, sumM, vecSum, mulM, vecMul = pickle.loads(f_handle.read())
-        print('Loading saved parsed files took {:.2f} seconds'.format(time.time() - start_time))
-
-    print('\nComputing matrix sum...')
+def main_function(file_names):
+    APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+    APP_UPLOADS = os.path.join(APP_ROOT, 'uploads/')
+    reading_time = []
     start_time = time.time()
-    print('Sum is ok: {}'.format(matrix_sum(matA, matB) == sumM))
-    print('Matrix sum finished in {:.2f} seconds'.format(time.time() - start_time))
+    matA, vecA = read_file(APP_UPLOADS + file_names[0])
+    reading_time.append('Reading took {:.2f} seconds'.format(time.time() - start_time))
 
-    print('\nComputing matrix product...')
+    matB, vecB = read_file(APP_UPLOADS + file_names[1])
+    reading_time.append('Reading took {:.2f} seconds'.format(time.time() - start_time))
+
+    sumM, vecSum = read_file(APP_UPLOADS + file_names[2], check=False)
+    reading_time.append('Reading took {:.2f} seconds'.format(time.time() - start_time))
+
+    mulM, vecMul = read_file(APP_UPLOADS + file_names[3], check=False)
+    reading_time.append('Reading took {:.2f} seconds'.format(time.time() - start_time))
+
+    computing_time = []
+
+    start_time = time.time()
+    computing_time.append('Sum is ok: {}'.format(matrix_sum(matA, matB) == sumM))
+    computing_time.append('Matrix sum finished in {:.2f} seconds'.format(time.time() - start_time))
+
     start_time = time.time()
     product_result = matrix_multiply(matA, matB)
-    print('Product is ok: {}'.format(product_result == mulM))
-    print('Matrix product finished in {:.2f} seconds'.format(time.time() - start_time))
+    computing_time.append('Product is ok: {}'.format(product_result == mulM))
+    computing_time.append('Matrix product finished in {:.2f} seconds'.format(time.time() - start_time))
 
-    print('\nComputing vector product... matA * v = vecA')
     start_time = time.time()
     product_result = vector_multiply(matA, [2017 - k for k in range(2017)])
-    print('Vector product is ok: {}'.format(product_result == vecA))
-    print('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
+    computing_time.append('Vector product is ok: {}'.format(product_result == vecA))
+    computing_time.append('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
 
-    print('\nComputing vector product... matB * v = vecB')
     start_time = time.time()
     product_result = vector_multiply(matA, [2017 - k for k in range(2017)])
-    print('Vector product is ok: {}'.format(product_result == vecA))
-    print('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
+    computing_time.append('Vector product is ok: {}'.format(product_result == vecA))
+    computing_time.append('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
 
-    print('\nComputing vector product... sumM * v = vecSum')
     start_time = time.time()
     product_result = vector_multiply(sumM, [2017 - k for k in range(2017)])
-    print('Vector product is ok: {}'.format(product_result == vecSum))
-    print('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
+    computing_time.append('Vector product is ok: {}'.format(product_result == vecSum))
+    computing_time.append('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
 
-    print('\nComputing vector product... mulM * v = vecMul')
     start_time = time.time()
     product_result = vector_multiply(mulM, [2017 - k for k in range(2017)])
-    print('Vector product is ok: {}'.format(product_result == vecMul))
-    print('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
+    computing_time.append('Vector product is ok: {}'.format(product_result == vecMul))
+    computing_time.append('Vector product finished in {:.2f} seconds'.format(time.time() - start_time))
+
+    return (reading_time, computing_time)

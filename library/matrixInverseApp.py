@@ -104,13 +104,15 @@ def non_square_matrix(matrix):
     row = matrix.shape[0]
     col = matrix.shape[1]
     if row > col:
-        for index in range(col, row):
-            matrix = np.delete(matrix, index, 0)
+        # compute matrix_left^-1 = (matrix.transpose * matrix) ^ -1 * matrix transpose
+        matrix_inverse = matrix.transpose() * matrix
+        matrix_left = main_function(matrix_inverse, matrix_inverse.shape[0], eps=10 ** (-10))[0]
+        print(matrix_left * matrix.transpose())
     else:
-        for index in range(row, col):
-            matrix = np.delete(matrix, index, 1)
-
-    print(main_function(matrix, matrix.shape[0], eps=10 ** (-10))[0])
+        # compute matrix right = matrix_transpose * (matrix * matrix_transpose) ^ -1
+        matrix_inverse = matrix * matrix.transpose()
+        matrix_right = main_function(matrix_inverse, matrix_inverse.shape[0], eps=10 ** (-10))[0]
+        print(matrix.transpose() * matrix_right)
 
 
 matrix = np.matrix([[7, 2, 1, 1],

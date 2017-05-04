@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Eigenvalues & SVD result</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <h4>Random generated matrix</h4>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <h4>N = {{ eigenvalues[2]['n'] }} and NN = {{ eigenvalues[2]['nn'] }}</h4>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>Diagonal vector</b></td>
+                    {% for index in range(0, NMAX) %}
+                        <td> {{ eigenvalues[2]['d'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>VAL vector</b></td>
+                    {% for index in range(0, NMAX + eigenvalues[2]['nn']) %}
+                        <td> {{ eigenvalues[2]['val'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td><b>COL vector</b></td>
+                    {% for index in range(0, NMAX + eigenvalues[2]['nn']) %}
+                        <td> {{ eigenvalues[2]['col'][index] }} </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Eigenvalues</b></caption>
+                <thead>
+                <tr>
+                    <th>Random matrix</th>
+                    <th>Matrix from file</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ eigenvalues[1][0] }}</td>
+                    <td>{{ eigenvalues[0][0] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Eigenvalues</b></caption>
+                <thead>
+                <tr>
+                    <th>Singular values</th>
+                    <th>Matrix rang</th>
+                    <th>Condition number</th>
+                    <th>Norm ||A - USV(transpose)||</th>
+                    <th>Norm ||A - As||</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ svd_info[1] }}</td>
+                    <td>{{ svd_info[3] }}</td>
+                    <td>{{ svd_info[4] }}</td>
+                    <td>{{ svd_info[5] }}</td>
+                    <td>{{ svd_info[7] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>As matrix for s = 2</b></caption>
+                <thead></thead>
+                <tbody>
+                {% for row in range(0, row) %}
+                    <tr>
+                        {% for col in range(0, col) %}
+                            <td> {{ svd_info[6][row, col] }} </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>

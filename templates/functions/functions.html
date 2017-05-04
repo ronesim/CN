@@ -20,50 +20,21 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1 class="display-3">Sparse Matrix</h1>
+        <h1 class="display-3">Functions</h1>
         <p>Mini tool description here...</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
     </div>
 </div>
 
 <div class="container">
-    <form data-toggle="validator" id="formMatrix" method="POST" enctype=multipart/form-data
-          action="/submitSparseMatrix">
+    <form data-toggle="validator" id="formMatrix" method="POST" enctype=multipart/form-data action="/submitFunctions">
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="aMatrix">A matrix</label>
-                    <input type="file" id=aMatrix name="aMatrix" class="form-control" placeholder="A matrix" required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label for="bMatrix">B matrix</label>
-                    <input type="file" id=bMatrix name="bMatrix" class="form-control" placeholder="B matrix">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label for="aoribMatrix">A * B matrix</label>
-                    <input type="file" id=aoribMatrix name="aoribMatrix" class="form-control"
-                           placeholder="A * B matrix">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label for="aplusbMatrix">A + B matrix</label>
-                    <input type="file" id=aplusbMatrix name="aplusbMatrix" class="form-control"
-                           placeholder="A + B matrix">
+                    <label for="inputCoeff">Function coefficients</label>
+                    <input type="text" id=inputCoeff name="inputCoeff" class="form-control" placeholder="Coefficients"
+                           required>
                 </div>
             </div>
         </div>

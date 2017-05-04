@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Numerical Calculus</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../../static/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">Sparse Matrix result</h1>
+        <p>Info about result...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Reading time</b></caption>
+                <thead>
+                <tr>
+                    <th>A matrix</th>
+                    <th>B matrix</th>
+                    <th>A + B matrix</th>
+                    <th>A * B matrix</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ result_time[0] }}</td>
+                    <td>{{ result_time[1] }}</td>
+                    <td>{{ result_time[2] }}</td>
+                    <td>{{ result_time[3] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table table-condensed table-bordered">
+                <caption><b>Computing time</b></caption>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><b>Computing matrix sum</b></td>
+                    <td>{{ solve_time[0] }}</td>
+                    <td>{{ solve_time[1] }}</td>
+                </tr>
+                <tr>
+                    <td><b>Computing matrix product</b></td>
+                    <td>{{ solve_time[2] }}</td>
+                    <td>{{ solve_time[3] }}</td>
+                </tr>
+                <tr>
+                    <td><b>Computing vector product: matA * v = vecA</b></td>
+                    <td>{{ solve_time[4] }}</td>
+                    <td>{{ solve_time[5] }}</td>
+                </tr>
+                <tr>
+                    <td><b>Computing vector product: matB * v = vecB</b></td>
+                    <td>{{ solve_time[6] }}</td>
+                    <td>{{ solve_time[7] }}</td>
+                </tr>
+                <tr>
+                    <td><b>Computing vector product: sumM * v = vecSum</b></td>
+                    <td>{{ solve_time[8] }}</td>
+                    <td>{{ solve_time[9] }}</td>
+                </tr>
+                <tr>
+                    <td><b>Computing vector product: mulM * v = vecMul</b></td>
+                    <td>{{ solve_time[10] }}</td>
+                    <td>{{ solve_time[11] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>
