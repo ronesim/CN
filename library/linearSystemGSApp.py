@@ -2,6 +2,8 @@ import math
 
 import numpy as np
 
+from library import sparseMatrix
+
 
 def solve_system_Gauss_Seidel(A, b, eps):
     XGS = np.zeros(A["n"])
@@ -54,7 +56,7 @@ def check_diagonal_dominance(matrix):
 
 
 def compute_norm(sparse_matrix_representation, XGS, b):
-    b_aprox = app3.vector_multiply(sparse_matrix_representation, XGS)
+    b_aprox = sparseMatrix.vector_multiply(sparse_matrix_representation, XGS)
     return np.max(abs(np.array(b_aprox) - np.array(b)))
 
 
